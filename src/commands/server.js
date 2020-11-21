@@ -1,5 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path')
 
 const browserVerify = {
     details: undefined,
@@ -14,7 +16,10 @@ const server = async (message, verify = false) => {
     }
     const page = await browserVerify.details.newPage();
     await page.goto('https://www.battlemetrics.com/servers/rust/4287920?timePlayed=3M');
+
+    
     let serverInfo = await page.evaluate(() => {
+        players = document.querySelector(".css-1y3vvw9 tbody").children[2].innerText;
         return document.querySelector(".css-1i1egz4").innerHTML;
     });
 
@@ -30,10 +35,8 @@ const server = async (message, verify = false) => {
     serverInfo.splice(0, 1);
     serverInfo.splice(4, 1);
     serverInfo[1] = serverInfo[1].replace("Player count:", "");
-    
+    serverInfo[3] = serverInfo[3].replace("Status:", "");
     console.log(serverInfo);
-    
-
 
     if(verify){
         const embed = new MessageEmbed();
@@ -41,7 +44,9 @@ const server = async (message, verify = false) => {
         .setImage("https://static.wixstatic.com/media/a8a9d1_28bea2a37f7244c281b87ca5f1617271~mv2.png/v1/fill/w_250,h_250,al_c,q_85,usm_0.66_1.00_0.01/BLACKMAMBA.webp")
         .setTitle("BlackMambaServer:")
         .setColor('#fcfcfc')
-        .addField("Players:", serverInfo[1]);
+        .addField("Status:", serverInfo[3])
+        .addField("Players:", serverInfo[1])
+        .addField("Site:", "www.blackmambarust.com");
 
         message.channel.send(embed);
     }

@@ -12,7 +12,7 @@ client.on("ready", async () => {
     console.log("Estou Online");
     // change activity status
     client.user.setPresence({
-        activity: { name: "BlackMambaRust", type: "WATCHING" },
+        activity: { name: "BlackMambaServer", type: "WATCHING" },
         status: 'READY' 
     });
     server();
